@@ -15,10 +15,23 @@ videoCapture.set(cv2.CAP_PROP_FRAME_HEIGHT, 800)
 #Defining Variables
 frameCounter = 0 #Note: We don't want to check for a match in each frame as the neural network takes longer than a second  
 faceMatch = False
+#referenceImage = cv2.imread("photo.jpg")
 
 #Functions
 def f_checkFace(p_frame):
+    """
+    global faceMatch  #Declare faceMatch as global to modify the outer variable
+
+    try:
+        if DeepFace.verify(frame, referenceImage.copy())['verified']:
+            faceMatch = True
+        else:
+            faceMatch = False
+    except ValueError:
+        faceMatch = False
+    """
     pass;
+    
 
 while True:
     ret, frame = videoCapture.read() #ret - Boolean returning if a frame was captured / frame - Stores the captured frame
@@ -26,7 +39,7 @@ while True:
     if ret:
         if frameCounter % 30 == 0:
             try:
-                #Starts a new thread to run the f_checkFace function with the current frame.
+                #Starts a new thread to run the f_checkFace function with the current frame
                 #Using threading allows the main loop to continue capturing video without waiting for the face verification process.
                 threading.Thread(target=f_checkFace, args=(frame.copy(),)).start()
             except ValueError:
